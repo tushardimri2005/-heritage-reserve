@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1310" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Developer Portfolio & Sovereign Terminal</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: { 300: '#e5c98b', 400: '#d4af37', 500: '#c5a059', 600: '#a6823c' },
+            surface: { bg: '#0b1310', card: '#121d18', border: '#24352c', input: '#0e1713' },
+            ivory: { 100: '#f5f0e6', 300: '#d5cbb8', 400: '#9e9689' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b1310;
+      color: #f5f0e6;
+      -webkit-tap-highlight-color: transparent;
+      background-image: radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.07) 0%, transparent 65%);
+    }
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+    .pt-safe { padding-top: env(safe-area-inset-top, 16px); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .gold-shimmer { background: linear-gradient(135deg, #d4af37 0%, #c5a059 50%, #9b7832 100%); }
+  </style>
+</head>
+<body class="font-sans antialiased h-screen overflow-hidden flex flex-col justify-between">
+
+  <!-- ================= PRIVATE STUDY UNLOCK MODAL ================= -->
+  <div id="unlockModal" class="fixed inset-0 bg-surface-bg/95 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6 text-center hidden">
+    <div class="w-14 h-14 rounded-full bg-surface-card border border-brand-500/40 flex items-center justify-center mb-4">
+      <i data-lucide="shield-check" class="w-6 h-6 text-brand-400"></i>
+    </div>
+    <h2 class="font-serif text-2xl font-bold text-ivory-100">Unlock Developer Terminal</h2>
+    <p class="text-xs text-ivory-400 mt-1 mb-5">Enter Master PIN to access your daily engineering feeds and control tools.</p>
+    <div class="w-full max-w-xs space-y-3">
+      <input type="password" id="modalPinInput" placeholder="••••" maxlength="8"
+        class="w-full bg-surface-card border border-surface-border text-center text-lg tracking-[0.4em] text-brand-300 py-3 rounded-xl focus:outline-none focus:border-brand-500 font-mono" />
+      <button onclick="verifyUnlockModal()" class="w-full gold-shimmer text-[#0b1310] font-bold py-3 rounded-xl active:scale-95 text-xs uppercase tracking-wider">
+        Authenticate
+      </button>
+      <button onclick="document.getElementById('unlockModal').classList.add('hidden')" class="text-xs text-ivory-400 underline pt-2 block mx-auto">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="pt-safe bg-surface-bg/95 border-b border-surface-border backdrop-blur-md z-20">
+    <div class="px-4 pt-3 pb-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-surface-card border border-brand-500/40 flex items-center justify-center">
+          <span class="font-serif font-bold text-base text-brand-400">DV</span>
+        </div>
+        <div>
+          <h2 class="font-serif font-bold text-base text-ivory-100 tracking-wide leading-none">Developer Portfolio</h2>
+          <p class="text-[10px] text-ivory-400 font-mono mt-0.5" id="modeIndicator">Public Portfolio Mode</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="toggleTerminalMode()" id="btnModeToggle" class="text-[11px] bg-surface-card hover:bg-surface-input text-brand-300 border border-brand-500/30 px-3 py-1.5 rounded-xl flex items-center gap-1.5 active:scale-95 transition-all font-semibold">
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-400"></i>
+          <span id="btnModeText">Operator Login</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN VIEWPORT ================= -->
+  <main class="flex-1 overflow-y-auto no-scrollbar p-3.5 max-w-xl mx-auto w-full pb-28 space-y-4">
+
+    <!-- ================= PUBLIC PORTFOLIO VIEW ================= -->
+    <section id="view-portfolio" class="space-y-4">
+      <!-- Hero Card -->
+      <div class="bg-surface-card border border-surface-border p-5 rounded-3xl space-y-3 shadow-xl">
+        <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-brand-400 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">Full-Stack Architect</span>
+        <h1 class="font-serif text-3xl font-bold text-ivory-100 leading-tight">Building Zero-DB, Sovereign Web Systems.</h1>
+        <p class="text-xs text-ivory-300 leading-relaxed">
+          Specializing in high-performance web applications, stateless edge architectures, and minimalist user interfaces inspired by classic design principles.
+        </p>
+        <div class="pt-2 flex gap-2">
+          <a href="https://github.com" target="_blank" class="gold-shimmer text-[#0b1310] text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5">
+            <i data-lucide="github" class="w-4 h-4"></i> GitHub Profile
+          </a>
+          <button onclick="switchView('projects')" class="bg-surface-input border border-surface-border text-ivory-200 text-xs font-semibold px-4 py-2.5 rounded-xl hover:border-brand-500/40">
+            View Deployed Works
+          </button>
+        </div>
+      </div>
+
+      <!-- Skills Matrix -->
+      <div class="bg-surface-card border border-surface-border p-4 rounded-2xl space-y-3">
+        <h3 class="font-serif text-sm font-bold text-ivory-100 flex items-center gap-1.5">
+          <i data-lucide="cpu" class="w-4 h-4 text-brand-400"></i> Core Engineering Stack
+        </h3>
+        <div class="flex flex-wrap gap-1.5 text-xs font-mono">
+          <span class="bg-surface-input border border-surface-border px-2.5 py-1 rounded-lg text-brand-300">JavaScript / TypeScript</span>
+          <span class="bg-surface-input border border-surface-border px-2.5 py-1 rounded-lg text-brand-300">Tailwind CSS</span>
+          <span class="bg-surface-input border border-surface-border px-2.5 py-1 rounded-lg text-brand-300">Stateless Architecture</span>
+          <span class="bg-surface-input border border-surface-border px-2.5 py-1 rounded-lg text-brand-300">REST APIs & Webhooks</span>
+          <span class="bg-surface-input border border-surface-border px-2.5 py-1 rounded-lg text-brand-300">Vercel Edge Deployment</span>
+          <span class="bg-surface-input border border-surface-border px-2.5 py-1 rounded-lg text-brand-300">PWA Development</span>
+        </div>
+      </div>
+
+      <!-- Featured Project -->
+      <div class="bg-surface-card border border-surface-border p-4 rounded-2xl space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="font-serif text-sm font-bold text-ivory-100">PulseFlow Nexus</span>
+          <span class="text-[9px] font-mono bg-brand-500/15 text-brand-300 px-2 py-0.5 rounded">Live App</span>
+        </div>
+        <p class="text-xs text-ivory-400">A mobile-first sovereign command orchestrator featuring zero-database architecture, AI integration, and live proxy tools.</p>
+        <div class="pt-1 flex justify-between items-center text-xs">
+          <span class="font-mono text-ivory-400">HTML5 • Tailwind • Web APIs</span>
+          <a href="#" target="_blank" class="text-brand-300 font-semibold hover:underline">Launch App ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PRIVATE OPERATOR TERMINAL VIEW (LOCKED UNTIL PIN ENTERED) ================= -->
+    <section id="view-terminal" class="hidden space-y-4">
+      <div class="bg-surface-card border border-brand-500/30 p-4 rounded-2xl space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-serif text-sm font-bold text-brand-300 flex items-center gap-1.5">
+            <i data-lucide="rss" class="w-4 h-4 text-brand-400"></i> Daily Engineering Feed (HackerNews)
+          </span>
+          <span class="text-[10px] font-mono text-emerald-400 animate-pulse">● Live Stream</span>
+        </div>
+        <p class="text-[11px] text-ivory-400">Top technical discussions and system architectures updated hourly.</p>
+        <div id="hnFeedContainer" class="space-y-2 pt-2">
+          <p class="text-xs text-ivory-400 font-mono">Fetching latest engineering posts...</p>
+        </div>
+      </div>
+
+      <!-- Quick X-Ray Reader & Webhook Transmitter -->
+      <div class="bg-surface-card border border-surface-border p-4 rounded-2xl space-y-3">
+        <span class="font-serif text-sm font-bold text-ivory-100 flex items-center gap-1.5">
+          <i data-lucide="terminal" class="w-4 h-4 text-brand-400"></i> Daily Dispatch & X-Ray Tool
+        </span>
+        <div class="flex gap-2">
+          <input type="text" id="terminalUrlInput" placeholder="Paste article URL for X-Ray extraction..."
+            class="flex-1 bg-surface-input border border-surface-border rounded-xl px-3 py-2 text-xs text-ivory-100 font-mono outline-none focus:border-brand-500" />
+          <button onclick="runTerminalXRay()" class="gold-shimmer text-[#0b1310] text-xs font-bold px-3.5 py-2 rounded-xl active:scale-95">Extract</button>
+        </div>
+        <pre id="terminalOutput" class="bg-surface-input border border-surface-border rounded-xl p-3 text-[11px] font-mono text-ivory-300 overflow-x-auto max-h-40">Terminal ready for operator commands...</pre>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= BOTTOM NAVIGATION ================= -->
+  <nav class="fixed bottom-0 inset-x-0 bg-surface-bg/95 border-t border-surface-border pb-safe z-30 backdrop-blur-md">
+    <div class="max-w-xl mx-auto flex items-center justify-around px-2 py-2">
+      <button onclick="switchView('portfolio')" id="nav-portfolio" class="flex flex-col items-center gap-1 py-1 px-4 text-brand-400">
+        <i data-lucide="user" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold tracking-wide">Portfolio</span>
+      </button>
+      <button onclick="switchView('projects')" id="nav-projects" class="flex flex-col items-center gap-1 py-1 px-4 text-ivory-400">
+        <i data-lucide="folder-git-2" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold tracking-wide">Works</span>
+      </button>
+      <button onclick="checkTerminalAccess()" id="nav-terminal" class="flex flex-col items-center gap-1 py-1 px-4 text-ivory-400">
+        <i data-lucide="terminal-square" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold tracking-wide">Operator</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    const MASTER_PIN = "1234";
+    let isOperatorUnlocked = false;
+
+    function checkTerminalAccess() {
+      if (isOperatorUnlocked) {
+        switchView('terminal');
+      } else {
+        document.getElementById('unlockModal').classList.remove('hidden');
+      }
+    }
+
+    function verifyUnlockModal() {
+      const pin = document.getElementById('modalPinInput').value;
+      if (pin === MASTER_PIN) {
+        isOperatorUnlocked = true;
+        document.getElementById('unlockModal').classList.add('hidden');
+        document.getElementById('modalPinInput').value = '';
+        document.getElementById('modeIndicator').innerText = 'Operator Terminal Unlocked';
+        document.getElementById('btnModeText').innerText = 'Lock Terminal';
+        document.getElementById('btnModeToggle').innerHTML = '<i data-lucide="unlock" class="w-3.5 h-3.5 text-emerald-400"></i><span id="btnModeText">Lock Terminal</span>';
+        switchView('terminal');
+        loadHackerNewsFeed();
+      } else {
+        alert("Incorrect Master PIN.");
+      }
+      lucide.createIcons();
+    }
+
+    function toggleTerminalMode() {
+      if (isOperatorUnlocked) {
+        isOperatorUnlocked = false;
+        document.getElementById('modeIndicator').innerText = 'Public Portfolio Mode';
+        document.getElementById('btnModeToggle').innerHTML = '<i data-lucide="lock" class="w-3.5 h-3.5 text-brand-400"></i><span>Operator Login</span>';
+        switchView('portfolio');
+      } else {
+        document.getElementById('unlockModal').classList.remove('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    async function loadHackerNewsFeed() {
+      const container = document.getElementById('hnFeedContainer');
+      container.innerHTML = '<p class="text-xs text-ivory-400 font-mono">Fetching Hacker News top stories...</p>';
+      try {
+        const topRes = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
+        const ids = await topRes.json();
+        const top5 = ids.slice(0, 5);
+        const stories = await Promise.all(top5.map(id => fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r => r.json())));
+        
+        container.innerHTML = stories.map(s => `
+          <a href="${s.url || '#'}" target="_blank" class="block bg-surface-input p-2.5 rounded-xl border border-surface-border hover:border-brand-500/40 transition-colors">
+            <h4 class="text-xs font-serif font-bold text-ivory-100">${s.title}</h4>
+            <span class="text-[10px] text-ivory-400 font-mono">▲ ${s.score} points • Comments ↗</span>
+          </a>
+        `).join('');
+      } catch (e) {
+        container.innerHTML = '<p class="text-xs text-red-400 font-mono">Could not load live feed.</p>';
+      }
+    }
+
+    async function runTerminalXRay() {
+      const url = document.getElementById('terminalUrlInput').value.trim();
+      const output = document.getElementById('terminalOutput');
+      if (!url) return alert("Enter a URL first.");
+      output.innerText = "Extracting clean text via X-Ray proxy...";
+      try {
+        const res = await fetch(`https://r.jina.ai/${url.startsWith('http') ? url : 'https://' + url}`);
+        const text = await res.text();
+        output.innerText = text.slice(0, 1000) + "\n\n[Content truncated for display]";
+      } catch (e) {
+        output.innerText = "Extraction error.";
+      }
+    }
+
+    function switchView(view) {
+      if (view === 'terminal' && !isOperatorUnlocked) {
+        checkTerminalAccess();
+        return;
+      }
+      ['portfolio', 'terminal'].forEach(v => {
+        const targetId = v === 'projects' ? 'portfolio' : v;
+        const el = document.getElementById(`view-${targetId}`);
+        if (el) el.classList.toggle('hidden', v !== view && !(view === 'projects' && v === 'portfolio'));
+      });
+      lucide.createIcons();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
